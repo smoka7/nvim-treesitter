@@ -47,7 +47,7 @@ for _, v in ipairs(sorted_parsers) do
     .. (vim.loop.fs_stat('runtime/queries/' .. v.name .. '/folds.scm') and 'F' or ' ')
     .. (vim.loop.fs_stat('runtime/queries/' .. v.name .. '/indents.scm') and 'I' or ' ')
     .. (vim.loop.fs_stat('runtime/queries/' .. v.name .. '/injections.scm') and 'J' or ' ')
-    .. '`| '
+    .. '` | '
 
   -- CLI
   generated_text = generated_text
@@ -64,7 +64,7 @@ for _, v in ipairs(sorted_parsers) do
 end
 generated_text = generated_text .. footnotes
 
-local readme = assert(io.open('SUPPORTED_LANGUAGES.md'), 'rb')
+local readme = assert(io.open('SUPPORTED_LANGUAGES.md', 'r'))
 local readme_text = readme:read('*a')
 readme:close()
 
@@ -74,7 +74,7 @@ local new_readme_text = string.gsub(
   '<!--parserinfo-->\n' .. generated_text .. '<!--parserinfo-->'
 )
 
-readme = assert(io.open('SUPPORTED_LANGUAGES.md'), 'w')
+readme = assert(io.open('SUPPORTED_LANGUAGES.md', 'w'))
 readme:write(new_readme_text)
 readme:close()
 

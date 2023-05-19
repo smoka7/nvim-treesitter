@@ -914,10 +914,10 @@ M.configs = {
 
   objc = {
     install_info = {
-      url = "https://github.com/amaanq/tree-sitter-objc",
-      files = { "src/parser.c" },
+      url = 'https://github.com/amaanq/tree-sitter-objc',
+      files = { 'src/parser.c' },
     },
-    maintainers = { "@amaanq" },
+    maintainers = { '@amaanq' },
   },
 
   ocaml = {
