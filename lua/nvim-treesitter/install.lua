@@ -234,17 +234,6 @@ local function get_installed_revision(lang)
   return revision
 end
 
--- Checks if parser is installed with nvim-treesitter
----@param lang string
----@return boolean
-local function is_installed(lang)
-  return vim.list_contains(config.installed_parsers(), lang)
-end
-
-local function is_ignored(lang)
-  return vim.list_contains(config.ignored_parsers(), lang)
-end
-
 ---@param lang string
 ---@return boolean
 local function needs_update(lang)
@@ -289,7 +278,7 @@ end
 ---@param with_sync boolean
 ---@param generate_from_grammar boolean
 local function install_lang(lang, cache_dir, install_dir, force, with_sync, generate_from_grammar)
-  if is_installed(lang) then
+  if vim.list_contains(config.installed_parsers(), lang) then
     if not force then
       local yesno =
         vim.fn.input(lang .. ' parser already available: would you like to reinstall ? y/n: ')
@@ -466,14 +455,14 @@ end
 ---@field with_sync boolean
 ---@field force boolean
 ---@field generate_from_grammar boolean
----@field exclude_configured_parsers boolean
+---@field filter_ignored boolean
 
 ---Normalize languages
 ---@param languages? string[]|string
 ---@param filter_installed? boolean
----@param exclude_configured? boolean
+---@param filter_ignored? boolean
 ---@return string[]
-local function norm_languages(languages, filter_installed, exclude_configured)
+local function norm_languages(languages, filter_installed, filter_ignored)
   if not languages then
     return {}
   end
@@ -499,9 +488,9 @@ local function norm_languages(languages, filter_installed, exclude_configured)
     end
   end
 
-  if exclude_configured then
+  if filter_ignored then
     languages = vim.iter.filter(function(v)
-      return not is_ignored(v)
+      return not vim.list_contains(config.ignored_parsers(), v)
     end, languages)
   end
 
@@ -523,7 +512,7 @@ function M.install(languages, options)
   local with_sync = options.with_sync
   local force = options.force
   local generate_from_grammar = options.generate_from_grammar
-  local exclude_configured_parsers = options.exclude_configured_parsers
+  local filter_ignored = options.filter_ignored
 
   reset_progress_counter()
 
@@ -539,7 +528,7 @@ function M.install(languages, options)
     force = true
   end
 
-  languages = norm_languages(languages, nil, exclude_configured_parsers)
+  languages = norm_languages(languages, nil, filter_ignored)
 
   for _, lang in ipairs(languages) do
     install_lang(lang, cache_dir, install_dir, force, with_sync, generate_from_grammar)
