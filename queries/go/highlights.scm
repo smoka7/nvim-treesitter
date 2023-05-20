@@ -64,6 +64,8 @@
   "&"
   "&&"
   "&="
+  "&^"
+  "&^="
   "%"
   "%="
   "^"
@@ -92,12 +94,10 @@
 
 [
   "break"
-  "chan"
   "const"
   "continue"
   "default"
   "defer"
-  "go"
   "goto"
   "interface"
   "map"
@@ -111,6 +111,7 @@
 
 "func" @keyword.function
 "return" @keyword.return
+"go" @keyword.coroutine
 
 "for" @repeat
 
@@ -134,6 +135,7 @@
            "any"
            "bool"
            "byte"
+           "chan"
            "complex128"
            "complex64"
            "error"
@@ -206,7 +208,10 @@
  (false)
 ] @boolean
 
-(nil) @constant.builtin
+[
+ (nil)
+ (iota)
+ ] @constant.builtin
 
 (keyed_element
   . (literal_element (identifier) @field))
